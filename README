@@ -12,7 +12,23 @@ They already have a GUI but I didn't like it.
 Status
 ------
 
-This is not quite finished, but I thought I'd get it checked into GitHub.
+Released. Please see the wiki page for end user documentation (click 'Wiki' tab
+above) if you just want to download and run the program.
+
+
+Building
+--------
+
+To build, just run the Ant build script. It should automatically build onto
+your desktop.
+
+You need to build this on a Mac because:
+
+(a) it relies on the Apple Java Extensions. (It's possible to workaround this
+    using a stub, but I didn't bother.)
+
+(b) it uses the 'hdiutil' binary to create a DMG file, which is (annoyingly)
+    Mac-only.
 
 
 License
