@@ -25,6 +25,9 @@ import java.util.*;
 
 import javax.swing.*;
 
+import com.apple.eawt.*;
+import com.apple.eawt.AppEvent.AboutEvent;
+
 import com.leafdigital.gpsbabeleasy.AfterOptions.InFileAction;
 import com.leafdigital.gpsbabeleasy.FormatChooser.Format;
 import com.leafdigital.gpsbabeleasy.ProgressDisplay.ProgressTableModel;
@@ -34,6 +37,11 @@ import com.leafdigital.gpsbabeleasy.ProgressDisplay.ProgressTableModel;
  */
 public class GpsBabelEasy extends JFrame
 {
+	/**
+	 * Application title.
+	 */
+	public final static String TITLE_TEXT = "GPSBabel easy converter";
+	
 	/**
 	 * Space normally used between UI components.
 	 */
@@ -49,6 +57,24 @@ public class GpsBabelEasy extends JFrame
 	private ProgressDisplay progress;
 	private FormatChooser chooser;
 	private AfterOptions options;
+	
+	private String version, gpsBabelVersion;
+	
+	/** 
+	 * @return Version
+	 */
+	public String getVersion()
+	{
+		return version;
+	}
+	
+	/** 
+	 * @return GPSBabel version
+	 */
+	public String getGpsBabelNameAndVersion()
+	{
+		return gpsBabelVersion;
+	}
 
 	/**
 	 * Main method just opens window.
@@ -81,7 +107,7 @@ public class GpsBabelEasy extends JFrame
 	public GpsBabelEasy()
 	{
 		// Window basics
-		super("GPSBabel easy converter");
+		super(TITLE_TEXT);
 
 		// TODO Find this inside the app
 		gpsBabelPath = "/Users/sam/Desktop/gpsbabel";
@@ -102,11 +128,12 @@ public class GpsBabelEasy extends JFrame
 			BorderLayout.NORTH);
 
 		// Get GPSBabel details
-		String gpsBabelVersion = "GPSBabel", gpsBabelDate = "";
+		gpsBabelVersion = "GPSBabel";
+		String gpsBabelDate = "";
 		try
 		{
 			RunResult result = runGpsBabel("-V");
-			gpsBabelVersion = result.getStdout().trim().replace(" Version ", " ");
+			gpsBabelVersion = result.getStdout().trim().replace(" Version ", " ").trim();
 			Calendar c = Calendar.getInstance();
 			c.setTimeInMillis(new File(gpsBabelPath).lastModified());
 			gpsBabelDate = c.get(Calendar.YEAR) + "";
@@ -130,7 +157,7 @@ public class GpsBabelEasy extends JFrame
 
 		// Copyright
 		InputStream versionStream = getClass().getResourceAsStream("version.txt");
-		String version = "(dev)";
+		version = "(dev)";
 		if(versionStream != null)
 		{
 			try
@@ -163,6 +190,17 @@ public class GpsBabelEasy extends JFrame
 				}
 			}
 		});
+		
+		// Set up Mac-specific stuff
+		Application.getApplication().setAboutHandler(new AboutHandler()
+		{
+			@Override
+			public void handleAbout(AboutEvent e)
+			{
+				new AboutDialog(GpsBabelEasy.this);
+			}
+		});
+		Application.getApplication().setQuitStrategy(QuitStrategy.CLOSE_ALL_WINDOWS);
 
 		// Finish off window
 		pack();
