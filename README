@@ -1,0 +1,31 @@
+GPSBabel easy converter
+-----------------------
+
+This is a GUI for the GPSBabel GPS format conversion system on Mac OS X.
+
+NOTE: I have no connection with the GPSBabel project. For information about
+that, see www.gpsbabel.org.
+
+They already have a GUI but I didn't like it.
+
+
+Status
+------
+
+This is not quite finished, but I thought I'd get it checked into GitHub.
+
+
+License
+-------
+
+GPL3. See LICENSE file.
+
+Copyright 2012 Samuel Marshall, except as noted below.
+
+
+Credits
+-------
+
+All code by Samuel Marshall / leafdigital.
+
+Icon based on the engraving 'Turris Babel' by Athanasius Kircher (1679).
