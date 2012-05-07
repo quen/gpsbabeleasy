@@ -129,9 +129,24 @@ public class GpsBabelEasy extends JFrame
 			BorderLayout.CENTER);
 
 		// Copyright
+		InputStream versionStream = getClass().getResourceAsStream("version.txt");
+		String version = "(dev)";
+		if(versionStream != null)
+		{
+			try
+			{
+				version = new BufferedReader(new InputStreamReader(versionStream, "UTF-8")).readLine();
+				versionStream.close();
+			}
+			catch(IOException e)
+			{
+				// Come on, this can't happen
+				e.printStackTrace();
+			}
+		}
 		final JLabel copyright = new JLabel(
 			gpsBabelVersion + " \u00a9 " + gpsBabelDate + " Robert Lipe, gpsbabel.org. " +
-			"Easy converter \u00a9 2012 Samuel Marshall / leafdigital.");
+			"Easy converter " + version + " \u00a9 2012 Samuel Marshall / leafdigital.");
 		copyright.putClientProperty("JComponent.sizeVariant", "mini");
 		lower2.add(new BorderWrapper(copyright, 0, UI_SPACING, UI_SPACING, UI_SPACING), BorderLayout.SOUTH);
 		

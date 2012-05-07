@@ -1,0 +1,139 @@
+<!--
+  leafChat Ant build script
+  
+  This is a standard Ant build; you can build the app's deliverables by running
+  the default 'all' target.
+
+  Properties that you need to override (in your IDE or on Ant commandline):
+  - sigtest
+  - makensis (if building Windows version)
+  - javart (if building on a Mac)
+
+  For the least effort, build the 'zip' target (which is the standard Linux
+  distributable, but also works on other platforms). That way you only need
+  sigtest and not the other two dependencies.
+  
+  See below for details of all properties (including ones you don't *need* to
+  override, but might want to).
+  
+  The Mac build will only work on a Mac because it uses the Mac-only 'hdiutil'
+  executable. On other platforms, build the targets 'zip' and 'windowsinstaller'
+  to create the other two deliverables.
+  
+  The full build typically takes a bit under 2 minutes on my system which has
+  a relatively slow hard disk. On a system with a faster HD it should be
+  quicker, and with an SSD much quicker.
+  -->
+<project name="gpsbabeleasy" default="all" basedir=".">
+
+	<!--
+	  Temporary build location
+	  -->
+	<property name="build" location="${java.io.tmpdir}/build/gpsbabeleasy"/>
+
+	<!--
+	  Target locations for final build products.
+	  -->
+	<property name="dmglocation" location="${user.home}/Desktop"/>
+
+	<!--
+	  Location of JavaApplicationStub (from Apple Java SDK)
+	  -->
+	<property name="stub"
+		location="/System/Library/Frameworks/JavaVM.framework/Resources/MacOS/JavaApplicationStub"/>
+	
+	<description>
+		 Builds GPSBabel easy converter.
+	</description>
+
+	<target name="init">
+		<!-- Build timestamp -->
+		<tstamp/>
+
+		<!-- Get current branch from Git. Release branches are of form 'r1.0'. -->
+		<loadfile srcfile=".git/HEAD" property="version">
+			<filterchain>
+				<linecontainsregexp>
+					<regexp pattern="^ref: refs/heads/"/>
+				</linecontainsregexp>
+				<tokenfilter>
+					<replacestring from="ref: refs/heads/r" to=""/>
+					<replaceregex pattern="^ref.*$" replace="dev_${DSTAMP}_${TSTAMP}"/>
+				</tokenfilter>
+				<striplinebreaks/>
+			</filterchain>
+		</loadfile>
+		
+		<!-- Define target filename -->
+		<property name="osxdmg" location="${dmglocation}/GPSBabelEasyConverter_${version}.dmg"/>
+
+		<delete dir="${build}"/>
+		<mkdir dir="${build}"/>
+	</target>
+
+	<target name="compile" depends="init">
+		<mkdir dir="${build}/classes"/>
+		<!-- Compile -->
+		<javac srcdir="src" destdir="${build}/classes" source="1.6"
+			target="1.6" encoding="UTF-8" debug="true" optimize="true"
+			includeantruntime="false">
+			<include name="com/leafdigital/gpsbabeleasy/*.java"/>
+		</javac>
+		<!-- Add the file with version info -->
+		<echo file="${build}/classes/com/leafdigital/gpsbabeleasy/version.txt"
+			message="${version}"/>
+	</target>
+
+	<target name="jar" depends="compile">
+		<mkdir dir="${build}/output"/>
+		<jar jarfile="${build}/output/GPSBabelEasy.jar" basedir="${build}/classes">
+			<manifest>
+				<attribute name="Main-Class" value="com.leafdigital.gpsbabeleasy.GpsBabelEasy"/>
+			</manifest>
+		</jar>
+	</target>
+
+	<target name="osxapp" depends="jar">
+
+			<property name="osxapp" location="${build}/osxdmg/GPSBabel easy converter.app"/> 
+
+			<!-- Create the distribution directory -->
+			<mkdir dir="${osxapp}"/>
+
+			<!-- Copy all the standard files into it -->
+			<copy todir="${osxapp}">
+				<fileset dir="mac/app">
+					<exclude name="**/Info.plist"/>
+				</fileset>
+			</copy>
+		  <copy todir="${osxapp}/Contents/MacOS" file="${stub}"/>
+			<copy todir="${osxapp}/Contents" file="mac/app/Contents/Info.plist">
+				<filterset>
+					<filter token="DOTTEDVERSION" value="${version}"/>
+				</filterset>
+			</copy>
+
+			<!-- Copy jar file -->
+			<copy todir="${osxapp}/Contents/Resources/Java" file="${build}/output/GPSBabelEasy.jar"/>
+
+			<!-- Make the stub executable -->
+			<chmod file="${osxapp}/Contents/MacOS/JavaApplicationStub" perm="ugo+rx"/>
+	</target>
+
+	<target name="osxdmg" depends="osxapp" description="Create OS X .dmg">
+		<delete file="${osxdmg}"/>
+		<exec executable="hdiutil" failonerror="true">
+			<arg value="create"/>
+			<arg value="-fs"/>
+			<arg value="HFS+"/>
+			<arg value="-volname"/>
+			<arg value="GPSBabel easy converter"/>
+			<arg value="-srcfolder"/>
+			<arg file="${build}/osxdmg"/>
+			<arg file="${osxdmg}"/>
+		</exec>
+	</target>
+
+	<target name="all" depends="osxdmg"/>
+
+</project>
