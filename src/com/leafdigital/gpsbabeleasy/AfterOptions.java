@@ -27,7 +27,7 @@ import java.util.regex.*;
 import javax.script.*;
 import javax.swing.*;
 
-/** 
+/**
  * Component that lets people select what happens after conversion completes
  * to the original and new file.
  */
@@ -35,7 +35,7 @@ public class AfterOptions extends JPanel
 {
 	private final static String IN_TEXT = "Input file move location";
 	private final static String OUT_TEXT = "Output file location";
-	
+
 	private final static String IN_DO_NOTHING_TEXT = "Leave input file alone";
 	private final static String IN_TRASH_TEXT = "Move input file to trash (via desktop)";
 	private final static String SELECT_FOLDER_TEXT = "Move to folder...";
@@ -44,18 +44,18 @@ public class AfterOptions extends JPanel
 
 	/** Extra space required either side of combo boxes by theme */
 	private final static int UI_COMBO_EDGE = 5;
-	
+
 	private final static int UI_SMALL_TEXT_ANTIPAD = 3;
 
 	private GpsBabelEasy easy;
 	private JComboBox inOption, outOption;
-	
+
 	private Object selectedSynch = new Object();
 	private InFileAction inSelected;
 	private OutOption outSelected;
-	
+
 	private boolean ignoreComboEvents = false;
-	
+
 	/**
 	 * @param easy Owner
 	 */
@@ -67,12 +67,12 @@ public class AfterOptions extends JPanel
 			GpsBabelEasy.UI_SPACING - UI_SMALL_TEXT_ANTIPAD,
 			GpsBabelEasy.UI_SPACING - UI_COMBO_EDGE,
 			0, GpsBabelEasy.UI_SPACING - UI_COMBO_EDGE));
-		
+
 		JPanel left = new JPanel(new BorderLayout(1, 1)),
 			right = new JPanel(new BorderLayout(1, 1));
 		add(left);
 		add(right);
-		
+
 		JLabel inLabel = new JLabel(IN_TEXT), outLabel = new JLabel(OUT_TEXT);
 		inLabel.putClientProperty("JComponent.sizeVariant", "small");
 		outLabel.putClientProperty("JComponent.sizeVariant", "small");
@@ -80,7 +80,7 @@ public class AfterOptions extends JPanel
 		outLabel.setBorder(BorderFactory.createEmptyBorder(0, UI_COMBO_EDGE, 0, 0));
 		left.add(inLabel, BorderLayout.NORTH);
 		right.add(outLabel, BorderLayout.NORTH);
-		
+
 		DefaultComboBoxModel inModel = new ComboBoxSeparatorModel(),
 			outModel = new ComboBoxSeparatorModel();
 
@@ -123,11 +123,11 @@ public class AfterOptions extends JPanel
 				}
 			}
 		});
-		
+
 		// Set up options
 		updateCombos();
 	}
-	
+
 	/**
 	 * @return Selected action for input file handling.
 	 */
@@ -135,7 +135,7 @@ public class AfterOptions extends JPanel
 	{
 		return inSelected;
 	}
-	
+
 	/**
 	 * @return Target location for output files or null to use same as input
 	 */
@@ -150,7 +150,7 @@ public class AfterOptions extends JPanel
 			return null;
 		}
 	}
-	
+
 	private final static int MRU_LENGTH = 3;
 
 	private void inClicked(Object selected)
@@ -165,7 +165,7 @@ public class AfterOptions extends JPanel
 				{
 					// Set to select directories
 					System.setProperty("apple.awt.fileDialogForDirectories", "true");
-					FileDialog fd = new FileDialog(easy); 
+					FileDialog fd = new FileDialog(easy);
 					// Enter modal dialog
 					fd.setVisible(true);
 					// Modal dialog finished
@@ -203,7 +203,7 @@ public class AfterOptions extends JPanel
 			}
 		}
 	}
-	
+
 	private void outClicked(Object selected)
 	{
 		OutOption option = (OutOption)selected;
@@ -216,7 +216,7 @@ public class AfterOptions extends JPanel
 				{
 					// Set to select directories
 					System.setProperty("apple.awt.fileDialogForDirectories", "true");
-					FileDialog fd = new FileDialog(easy); 
+					FileDialog fd = new FileDialog(easy);
 					// Enter modal dialog
 					fd.setVisible(true);
 					// Modal dialog finished
@@ -258,7 +258,7 @@ public class AfterOptions extends JPanel
 	private void addFolderToMru(JComboBox box, File folder)
 	{
 		Preferences prefs = Preferences.userNodeForPackage(this.getClass());
-		
+
 		// Get current MRU and see if it contains this folder
 		int found = MRU_LENGTH - 1; // If not, treat like it was last
 		String[] current = new String[MRU_LENGTH];
@@ -268,7 +268,7 @@ public class AfterOptions extends JPanel
 			if(folder.toString().equals(current[i]))
 			{
 				found = i;
-	  	}	
+	  	}
 	  }
 
 	  // Move down existing values
@@ -276,10 +276,10 @@ public class AfterOptions extends JPanel
 	  {
 	  	current[i] = current[i-1];
 		}
-	  
+
 	  // Put this value in 0
 	  current[0] = folder.toString();
-	 
+
 	  // Save list
 	  for(int i = 0; i < MRU_LENGTH; i++)
 	  {
@@ -304,7 +304,7 @@ public class AfterOptions extends JPanel
 			easy.fatalError(e);
 		}
 	}
-	
+
 	/**
 	 * Called when a conversion happens; remember the dropdown choices
 	 */
@@ -332,7 +332,7 @@ public class AfterOptions extends JPanel
 			easy.fatalError(e);
 		}
 	}
-	
+
 	/**
 	 * Base class for everything to add to the input combo.
 	 */
@@ -373,7 +373,7 @@ public class AfterOptions extends JPanel
 				{
 					newName = usedFile.getName();
 					if(newName.contains("."))
-					{	
+					{
 						newName = newName.replaceFirst("(\\.[^.]*)$", " (" + i + ")$1");
 					}
 					else
@@ -395,7 +395,7 @@ public class AfterOptions extends JPanel
 			return inTarget;
 		}
 	}
-	
+
 	/**
 	 * Input action: leave files alone.
 	 */
@@ -406,20 +406,20 @@ public class AfterOptions extends JPanel
 		{
 			return IN_DO_NOTHING_TEXT;
 		}
-		
+
 		@Override
 		void afterConversion(File usedFile)
 		{
 			// Do nothing!
 		}
-		
+
 		@Override
 		String getType()
 		{
 			return "nothing";
 		}
 	}
-	
+
 	/**
 	 * Input action: move files to desktop then trash. (Move to desktop is to
 	 * make sure we don't add files to trash on a removable device, which takes
@@ -432,14 +432,14 @@ public class AfterOptions extends JPanel
 		{
 			return IN_TRASH_TEXT;
 		}
-		
+
 		@Override
 		void afterConversion(File usedFile)
 		{
 			// Get desktop (note: pretty sure these names are language-independent,
 			// i.e. even on a French or Chinese installation, /Desktop ought to work).
 			File desktop = new File(System.getProperty("user.home") + "/Desktop");
-			
+
 			// Move file onto desktop
 			try
 			{
@@ -450,7 +450,7 @@ public class AfterOptions extends JPanel
 				easy.fatalError(e);
 				return;
 			}
-			
+
 			runApplescript("tell application \"Finder\"\n" +
 				"delete POSIX file %1\n" +
 				"end tell",
@@ -463,14 +463,14 @@ public class AfterOptions extends JPanel
 			return "trash";
 		}
 	}
-	
+
 	/**
 	 * Input action: move files to specified location.
 	 */
 	private class MoveTo extends InFileAction
 	{
 		private String folder;
-		
+
 		private MoveTo(String folder)
 		{
 			this.folder = folder;
@@ -481,7 +481,7 @@ public class AfterOptions extends JPanel
 		{
 			return folder;
 		}
-		
+
 		@Override
 		void afterConversion(File usedFile)
 		{
@@ -501,7 +501,7 @@ public class AfterOptions extends JPanel
 				easy.fatalError(e);
 				return;
 			}
-			
+
 			// Move file
 			runApplescript("tell application \"Finder\" to move POSIX file %1 to POSIX file %2",
 				usedFile.getAbsolutePath(), new File(folder).getAbsolutePath());
@@ -513,7 +513,7 @@ public class AfterOptions extends JPanel
 			return "move";
 		}
 	}
-	
+
 	/**
 	 * Quotes and escapes a string for use in AppleScript
 	 * @param input Input string
@@ -521,9 +521,9 @@ public class AfterOptions extends JPanel
 	 */
 	private static String applescriptQuote(String input)
 	{
-		return "\"" + input.replace("\\", "\\\\").replace("\"", "\\\"") + "\""; 
+		return "\"" + input.replace("\\", "\\\\").replace("\"", "\\\"") + "\"";
 	}
-	
+
 	private final static Pattern REGEX_PERCENT = Pattern.compile("%([0-9]{1,2})");
 
 	/**
@@ -561,7 +561,7 @@ public class AfterOptions extends JPanel
 			easy.fatalError(e);
 		}
 	}
-	
+
 	/**
 	 * Input combo option; select a new folder.
 	 */
@@ -579,14 +579,14 @@ public class AfterOptions extends JPanel
 			return "selectfolder";
 		}
 	}
-	
+
 	/**
 	 * Base class for everything in the output option.
 	 */
 	private static abstract class OutOption
 	{
 	}
-	
+
 	/**
 	 * Output option: same folder as input.
 	 */
@@ -598,14 +598,14 @@ public class AfterOptions extends JPanel
 			return OUT_SAME_FOLDER_TEXT;
 		}
 	}
-	
+
 	/**
 	 * Output action: save files to specified location.
 	 */
 	private static class TargetTo extends OutOption
 	{
 		private String folder;
-		
+
 		private TargetTo(String folder)
 		{
 			this.folder = folder;
@@ -617,7 +617,7 @@ public class AfterOptions extends JPanel
 			return folder;
 		}
 	}
-	
+
 	/**
 	 * Output combo option; select a new folder.
 	 */
@@ -629,24 +629,24 @@ public class AfterOptions extends JPanel
 			return SELECT_FOLDER_TEXT;
 		}
 	}
-	
+
 	private void updateCombos()
 	{
 		try
 		{
 			ignoreComboEvents = true;
 			Preferences prefs = Preferences.userNodeForPackage(this.getClass());
-	
+
 			// Do input options first
 			ComboBoxSeparatorModel inModel = (ComboBoxSeparatorModel)inOption.getModel();
-			
+
 			// Remove existing options
 			inModel.removeAllElements();
-			
+
 			// Add default options
 			inModel.addElement(new DoNothing());
 			inModel.addElement(new Trash());
-	
+
 			// Add MRU locations
 			boolean gotFolder = false;
 		  for(int i=0; i < MRU_LENGTH; i++)
@@ -662,15 +662,15 @@ public class AfterOptions extends JPanel
 		  		inModel.addElement(new MoveTo(recent));
 		  	}
 		  }
-			
+
 			// Add 'new folder' option
 			inModel.addSeparator();
 			inModel.addElement(new InSelectFolder());
-					
+
 			if(inSelected != null)
 			{
 				// Preserve selection if specified...
-				for(int i=0; i<inModel.getSize(); i++) 
+				for(int i=0; i<inModel.getSize(); i++)
 				{
 					InOption possible = (InOption)inModel.getElementAt(i);
 					if(possible.toString() == inSelected.toString())
@@ -702,16 +702,16 @@ public class AfterOptions extends JPanel
 					inSelected = (InFileAction)inOption.getSelectedItem();
 				}
 			}
-	
+
 			// Do output options now
 			ComboBoxSeparatorModel outModel = (ComboBoxSeparatorModel)outOption.getModel();
-			
+
 			// Remove existing options
 			outModel.removeAllElements();
-			
+
 			// Add default options
 			outModel.addElement(new SameFolder());
-	
+
 			// Add MRU locations
 			gotFolder = false;
 		  for(int i=0; i < MRU_LENGTH; i++)
@@ -727,15 +727,15 @@ public class AfterOptions extends JPanel
 		  		outModel.addElement(new TargetTo(recent));
 		  	}
 		  }
-			
+
 			// Add 'new folder' option
 		  outModel.addSeparator();
 		  outModel.addElement(new OutSelectFolder());
-	
+
 			if(outSelected != null)
 			{
 				// Preserve selection if specified...
-				for(int i=0; i<outModel.getSize(); i++) 
+				for(int i=0; i<outModel.getSize(); i++)
 				{
 					OutOption possible = (OutOption)outModel.getElementAt(i);
 					if(possible.toString() == outSelected.toString())

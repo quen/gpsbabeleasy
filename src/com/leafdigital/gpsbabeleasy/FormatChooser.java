@@ -25,24 +25,24 @@ import java.util.regex.*;
 
 import javax.swing.*;
 
-/** 
+/**
  * Component that lets people select input and output formats.
  */
 public class FormatChooser extends JPanel
 {
 	private final static String IN_TEXT = "Input format";
 	private final static String OUT_TEXT = "Output format";
-	
+
 	/** Extra space required either side of combo boxes by theme */
 	private final static int UI_COMBO_EDGE = 5;
-	
+
 	private final static int UI_SMALL_TEXT_ANTIPAD = 3;
 
 	private GpsBabelEasy easy;
 	private JComboBox inFormat, outFormat;
 
 	private TreeSet<Format> formatSet;
-	
+
 	/**
 	 * @param easy Owner
 	 */
@@ -54,12 +54,12 @@ public class FormatChooser extends JPanel
 			GpsBabelEasy.UI_SPACING - UI_SMALL_TEXT_ANTIPAD,
 			GpsBabelEasy.UI_SPACING - UI_COMBO_EDGE,
 			0, GpsBabelEasy.UI_SPACING - UI_COMBO_EDGE));
-		
+
 		JPanel left = new JPanel(new BorderLayout(1, 1)),
 			right = new JPanel(new BorderLayout(1, 1));
 		add(left);
 		add(right);
-		
+
 		JLabel inLabel = new JLabel(IN_TEXT), outLabel = new JLabel(OUT_TEXT);
 		inLabel.putClientProperty("JComponent.sizeVariant", "small");
 		outLabel.putClientProperty("JComponent.sizeVariant", "small");
@@ -67,7 +67,7 @@ public class FormatChooser extends JPanel
 		outLabel.setBorder(BorderFactory.createEmptyBorder(0, UI_COMBO_EDGE, 0, 0));
 		left.add(inLabel, BorderLayout.NORTH);
 		right.add(outLabel, BorderLayout.NORTH);
-		
+
 		DefaultComboBoxModel inModel = new ComboBoxSeparatorModel(),
 			outModel = new ComboBoxSeparatorModel();
 
@@ -86,7 +86,7 @@ public class FormatChooser extends JPanel
 		outModel.addElement("\u00a0");
 		inFormat.setEnabled(false);
 		outFormat.setEnabled(false);
-		
+
 		// Acquire actual data in separate thread
 		(new Thread(new Runnable()
 		{
@@ -104,7 +104,7 @@ public class FormatChooser extends JPanel
 	public static class Format implements Comparable<Format>
 	{
 		private String code, display;
-		
+
 		private Format(String code, String display)
 		{
 			this.code = code;
@@ -116,7 +116,7 @@ public class FormatChooser extends JPanel
 		{
 			return display.compareTo(other.display);
 		}
-		
+
 		@Override
 		public String toString()
 		{
@@ -131,9 +131,9 @@ public class FormatChooser extends JPanel
 			return code;
 		}
 	}
-	
+
 	private final static int MRU_LENGTH = 3;
-	
+
 	/**
 	 * @return Input format
 	 */
@@ -149,7 +149,7 @@ public class FormatChooser extends JPanel
 	{
 		return (Format)outFormat.getSelectedItem();
 	}
-	
+
 	/**
 	 * Called when a conversion is actually done. Updates formats in preferences
 	 */
@@ -167,29 +167,29 @@ public class FormatChooser extends JPanel
 		  for(int i=0; i < MRU_LENGTH; i++)
 		  {
 		  	String recent = prefs.get(getPrefKey(box, i), null);
-		  	
+
 		  	// Stop as soon as there's a missing one
 		  	if(recent == null)
 		  	{
 		  		break;
 		  	}
-		  	
+
 		  	// Ignore if it's the same as the one we put in there
 		  	if(after[0].equals(recent))
 		  	{
 		  		continue;
 		  	}
-		  	
+
 		  	// OK, add it
 		  	after[afterIndex++] = recent;
-		  	
+
 		  	// Stop if we're out of space
 		  	if(afterIndex == MRU_LENGTH)
 		  	{
 		  		break;
 		  	}
 		  }
-		  
+
 		  // Save new MRU list
 		  for(int i=0; i < MRU_LENGTH; i++)
 		  {
@@ -212,15 +212,15 @@ public class FormatChooser extends JPanel
 		{
 			easy.fatalError(e);
 		}
-		
+
 		updateCombos();
 	}
-	
+
 	private void updateCombos()
 	{
 		// Get most recently used formats
 		Preferences prefs = Preferences.userNodeForPackage(this.getClass());
-		
+
 		// Use list to update combo boxes
 		JComboBox[] boxes = { inFormat, outFormat };
 		for(JComboBox box : boxes)
@@ -252,7 +252,7 @@ public class FormatChooser extends JPanel
 			{
 				model.addElement(format);
 			}
-			
+
 			// Combo box is enabled now
 			box.setEnabled(true);
 		}
@@ -268,7 +268,7 @@ public class FormatChooser extends JPanel
 		String key = "recentFormat." + (box == inFormat ? "in" : "out") + "." + i;
 		return key;
 	}
-	
+
 	/**
 	 * Separate thread that gets the list of formats.
 	 */
@@ -301,7 +301,7 @@ public class FormatChooser extends JPanel
 				// Windows if there's a CR)
 				line = line.replaceFirst("\\s+$", "");
 				pos = lf + 1;
-				
+
 				// Process line
 				if(!inFileTypes)
 				{
@@ -319,7 +319,7 @@ public class FormatChooser extends JPanel
 					{
 						break;
 					}
-					
+
 					// Match line
 					Matcher m = FORMAT_LINE.matcher(line);
 					if(m.matches())
@@ -331,7 +331,7 @@ public class FormatChooser extends JPanel
 					}
 				}
 			}
-			
+
 			SwingUtilities.invokeLater(new Runnable()
 			{
 				@Override

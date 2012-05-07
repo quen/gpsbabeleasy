@@ -46,7 +46,7 @@ public class ProgressDisplay extends JPanel
 
 	private final static String TICK = "\u2714";
 	private final static String CROSS = "\u2718";
-	
+
 	private final static Color TICK_RGB = new Color(20, 128, 20);
 	private final static Color CROSS_RGB = new Color(128, 20, 20);
 
@@ -58,7 +58,7 @@ public class ProgressDisplay extends JPanel
 	public ProgressDisplay(GpsBabelEasy easy)
 	{
 		super(new BorderLayout(GpsBabelEasy.UI_SPACING, GpsBabelEasy.UI_SPACING));
-		
+
 		DefaultTableColumnModel columnModel = new DefaultTableColumnModel();
 		for(int i=0; i<COLUMNS.length; i++)
 		{
@@ -75,21 +75,21 @@ public class ProgressDisplay extends JPanel
 				column.setMinWidth(COLUMN_DEFAULT_MIN_WIDTH);
 				column.setResizable(true);
 			}
-			
+
 			if(i == 0)
 			{
 				column.setCellRenderer(new TickRenderer());
 			}
 			columnModel.addColumn(column);
 		}
-		
+
 		model = new ProgressTableModel();
 		JTable table = new JTable(model, columnModel);
 		JScrollPane scrollPane = new JScrollPane(table,
 			JScrollPane.VERTICAL_SCROLLBAR_ALWAYS, JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 		add(scrollPane, BorderLayout.CENTER);
 	}
-	
+
 	private static class TickRenderer extends DefaultTableCellRenderer
 	{
 		@Override
@@ -110,7 +110,7 @@ public class ProgressDisplay extends JPanel
 			return result;
 		}
 	}
-	
+
 	/**
 	 * @return Table model
 	 */
@@ -118,7 +118,7 @@ public class ProgressDisplay extends JPanel
 	{
 		return model;
 	}
-	
+
 	/**
 	 * Data model used for progress table.
 	 */
@@ -131,14 +131,14 @@ public class ProgressDisplay extends JPanel
 		{
 			private int index;
 			private String[] cols = new String[COLUMNS.length];
-			
+
 			private Row(String input, int index)
 			{
 				for(int i=0; i<cols.length; i++)
 				{
 					switch(i)
 					{
-					case 1 : 
+					case 1 :
 						cols[1] = input;
 						break;
 					default:
@@ -182,7 +182,7 @@ public class ProgressDisplay extends JPanel
 					update();
 				}
 			}
-			
+
 			/**
 			 * Failure result.
 			 * @param result Result text
@@ -201,7 +201,7 @@ public class ProgressDisplay extends JPanel
 					update();
 				}
 			}
-			
+
 			private void update()
 			{
 				SwingUtilities.invokeLater(new Runnable()
@@ -214,10 +214,10 @@ public class ProgressDisplay extends JPanel
 				});
 			}
 		}
-		
+
 		private LinkedList<Row> rows = new LinkedList<Row>();
 		private HashMap<Object, Row> index = new HashMap<Object, Row>();
-		
+
 		@Override
 		public int getColumnCount()
 		{
@@ -235,7 +235,7 @@ public class ProgressDisplay extends JPanel
 		{
 			return rows.get(rowIndex).cols[columnIndex];
 		}
-		
+
 		/**
 		 * Adds a row.
 		 * @param input Input file for row
@@ -246,7 +246,7 @@ public class ProgressDisplay extends JPanel
 			final Row row = new Row(input, rows.size());
 			rows.addLast(row);
 			index.put(key, row);
-			
+
 			SwingUtilities.invokeLater(new Runnable()
 			{
 				@Override
@@ -256,7 +256,7 @@ public class ProgressDisplay extends JPanel
 				}
 			});
 		}
-		
+
 		/**
 		 * Obtains row for a given key.
 		 * @param key Row key
@@ -272,7 +272,7 @@ public class ProgressDisplay extends JPanel
 			}
 			return result;
 		}
-		
+
 		@Override
 		public boolean isCellEditable(int rowIndex, int columnIndex)
 		{

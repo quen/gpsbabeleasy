@@ -22,7 +22,7 @@ import java.awt.BorderLayout;
 
 import javax.swing.*;
 
-/** 
+/**
  * Convenient way to put borders on a component without affecting its insets
  * and stuff.
  */

@@ -30,7 +30,7 @@ class ComboBoxSeparatorRenderer implements ListCellRenderer
 	private ListCellRenderer originalRenderer, defaultRenderer;
 	private JPanel separatorPanel = new JPanel(new BorderLayout());
 	private JSeparator separator = new JSeparator();
-	
+
 	ComboBoxSeparatorRenderer(ListCellRenderer originalRenderer)
 	{
 		this.originalRenderer = originalRenderer;
@@ -57,7 +57,7 @@ class ComboBoxSeparatorRenderer implements ListCellRenderer
     }
 
     if(((ComboBoxSeparatorModel)list.getModel()).separatorAfter(index))
-    { 
+    {
       separatorPanel.removeAll();
       separatorPanel.add(normal, BorderLayout.CENTER);
       separatorPanel.add(separator, BorderLayout.SOUTH);

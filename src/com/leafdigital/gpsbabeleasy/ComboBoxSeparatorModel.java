@@ -25,28 +25,28 @@ import javax.swing.DefaultComboBoxModel;
 class ComboBoxSeparatorModel extends DefaultComboBoxModel
 {
 	private HashSet<Integer> separators = new HashSet<Integer>();
-	
+
 	@Override
 	public void removeAllElements()
 	{
 		super.removeAllElements();
 		separators.clear();
 	}
-	
+
 	@Override
 	public void removeElement(Object anObject)
 	{
 		throw new UnsupportedOperationException(
 			"Remove all elements at once instead");
 	}
-	
+
 	@Override
 	public void removeElementAt(int index)
 	{
 		throw new UnsupportedOperationException(
 			"Remove all elements at once instead");
 	}
-	
+
 	/**
 	 * Adds separator after the last item.
 	 * @throws IllegalStateException If you try to add at start of list
@@ -60,7 +60,7 @@ class ComboBoxSeparatorModel extends DefaultComboBoxModel
 		}
 		separators.add(size - 1);
 	}
-	
+
 	/**
 	 * @param index Index
 	 * @return True if there is a separator after this index

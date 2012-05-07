@@ -30,23 +30,23 @@ import java.util.List;
 
 import javax.swing.*;
 
-/** 
+/**
  * Area of window that you can drop files onto.
  */
 public class DropArea extends JComponent
 {
 	private GpsBabelEasy easy;
-	
+
 	private final static int CORNER_RADIUS = 8, BORDER_THICKNESS = 2;
-	
+
 	private final static Color
 		COLOR_OUTLINE = new Color(0xc0, 0xc0, 0xc0),
 		COLOR_INNER = new Color(0xd0, 0xd0, 0xd0),
 		COLOR_EXPLANATION = new Color(0x70, 0x70, 0x70),
 		COLOR_HOVERING_TEXT = Color.BLACK;
-	
+
 	private final static String DROP_HINT = "Drag and drop files here to convert them.";
-	
+
 	/**
 	 * State for area.
 	 */
@@ -60,32 +60,32 @@ public class DropArea extends JComponent
 		 * User is hovering over the area with files.
 		 */
 		HOVERING(DROP_HINT);
-		
+
 		private String message;
-		
+
 		State(String message)
 		{
 			this.message = message;
 		}
-		
+
 		private boolean isMessage()
 		{
 			return message != null;
 		}
-		
+
 		private String getMessage()
 		{
 			return message;
 		}
 	}
-	
+
 	private BufferedImage bg;
 	private Font labelFont;
-	
+
 	private State state;
-	
+
 	private DropTarget target;
-	
+
 	/**
 	 * @param easy Owner
 	 */
@@ -125,7 +125,7 @@ public class DropArea extends JComponent
 				}
 				dtde.rejectDrag();
 			}
-			
+
 		  @Override
 		  public void dragOver(DropTargetDragEvent dtde)
 		  {
@@ -134,7 +134,7 @@ public class DropArea extends JComponent
 		  		dtde.acceptDrag(DnDConstants.ACTION_COPY);
 		  	}
 		  }
-			
+
 			@Override
 			public void dragExit(DropTargetEvent dte)
 			{
@@ -144,7 +144,7 @@ public class DropArea extends JComponent
 				}
 				setState(AWAITING_FILES);
 			}
-			
+
 			@Override
 			public void drop(DropTargetDropEvent dtde)
 			{
@@ -173,20 +173,20 @@ public class DropArea extends JComponent
 					// wtf
 					e.printStackTrace();
 				}
-				
+
 				dtde.dropComplete(true);
 				setState(AWAITING_FILES);
 			}
 		});
 		target.setActive(true);
 	}
-	
+
 	private void setState(State state)
 	{
 		this.state = state;
 		repaint();
 	}
-	
+
 	private BufferedImage getBg()
 	{
 		int width = getWidth(), height = getHeight();
@@ -199,12 +199,12 @@ public class DropArea extends JComponent
 			g2.setColor(new Color(255, 0, 0, 255));
 			g2.fillRoundRect(0, 0, width - 1, height - 1,
 				CORNER_RADIUS, CORNER_RADIUS);
-			
+
 			bg = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
 			g2 = bg.createGraphics();
 			g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
 				RenderingHints.VALUE_ANTIALIAS_ON);
-			
+
 			g2.setComposite(AlphaComposite.SrcOver);
 			g2.setColor(COLOR_OUTLINE);
 			g2.fillRoundRect(0, 0, width + CORNER_RADIUS, height + CORNER_RADIUS,
@@ -213,7 +213,7 @@ public class DropArea extends JComponent
 			g2.fillRoundRect(BORDER_THICKNESS, BORDER_THICKNESS,
 				width + CORNER_RADIUS, height + CORNER_RADIUS,
 				CORNER_RADIUS, CORNER_RADIUS);
-			
+
 			g2.setComposite(AlphaComposite.DstIn);
 			g2.drawImage(mask, 0, 0, null);
 		}
@@ -232,14 +232,14 @@ public class DropArea extends JComponent
 		g2.drawImage(bg, 0, 0, null);
 
 		String message = null;
-		
+
 		if(state.isMessage())
 		{
 			g2.setColor(COLOR_EXPLANATION);
 			g2.setFont(labelFont);
 			message = state.getMessage();
 		}
-		
+
 		if(state == HOVERING)
 		{
 			g2.setColor(COLOR_HOVERING_TEXT);
@@ -248,7 +248,7 @@ public class DropArea extends JComponent
 		if(message != null)
 		{
 			Rectangle2D rect = g2.getFontMetrics().getStringBounds(message, g2);
-			g2.drawString(message, (width - (int)rect.getWidth()) / 2, height / 2);		
+			g2.drawString(message, (width - (int)rect.getWidth()) / 2, height / 2);
 		}
 	}
 }

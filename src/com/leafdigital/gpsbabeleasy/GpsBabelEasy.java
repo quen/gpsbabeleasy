@@ -32,7 +32,7 @@ import com.leafdigital.gpsbabeleasy.AfterOptions.InFileAction;
 import com.leafdigital.gpsbabeleasy.FormatChooser.Format;
 import com.leafdigital.gpsbabeleasy.ProgressDisplay.ProgressTableModel;
 
-/** 
+/**
  * Main application window.
  */
 public class GpsBabelEasy extends JFrame
@@ -41,34 +41,34 @@ public class GpsBabelEasy extends JFrame
 	 * Application title.
 	 */
 	public final static String TITLE_TEXT = "GPSBabel easy converter";
-	
+
 	/**
 	 * Space normally used between UI components.
 	 */
 	public final static int UI_SPACING = 10;
 	private final static int UI_SPACING_MINI_LABEL_ANTIPAD = 2;
 	private final static int UI_SPACING_COMBO_ANTIPAD = 4;
-	
+
 	private int lockCount;
 	private Object closeSynch = new Object();
-	
+
 	private String gpsBabelPath;
 
 	private ProgressDisplay progress;
 	private FormatChooser chooser;
 	private AfterOptions options;
-	
+
 	private String version, gpsBabelVersion;
-	
-	/** 
+
+	/**
 	 * @return Version
 	 */
 	public String getVersion()
 	{
 		return version;
 	}
-	
-	/** 
+
+	/**
 	 * @return GPSBabel version
 	 */
 	public String getGpsBabelNameAndVersion()
@@ -111,7 +111,7 @@ public class GpsBabelEasy extends JFrame
 
 		// Relative path should work when running from IDE or app bundle
 		gpsBabelPath = "./gpsbabel";
-	
+
 		setLayout(new BorderLayout());
 		JPanel main = new JPanel(new BorderLayout(UI_SPACING, UI_SPACING - UI_SPACING_COMBO_ANTIPAD));
 		getContentPane().add(main, BorderLayout.CENTER);
@@ -119,7 +119,7 @@ public class GpsBabelEasy extends JFrame
 		// Format options
 		chooser = new FormatChooser(this);
 		main.add(chooser, BorderLayout.NORTH);
-		
+
 		// Drop area
 		JPanel lower = new JPanel(new BorderLayout(UI_SPACING, 0));
 		main.add(lower, BorderLayout.CENTER);
@@ -149,7 +149,7 @@ public class GpsBabelEasy extends JFrame
 		// Options about what happens after conversion
 		options = new AfterOptions(this);
 		lower2.add(options, BorderLayout.NORTH);
-		
+
 		// Results display table
 		progress = new ProgressDisplay(this);
 		lower2.add(new BorderWrapper(progress, 0, UI_SPACING, 0, UI_SPACING),
@@ -176,7 +176,7 @@ public class GpsBabelEasy extends JFrame
 			"Easy converter " + version + " \u00a9 2012 Samuel Marshall / leafdigital.");
 		copyright.putClientProperty("JComponent.sizeVariant", "mini");
 		lower2.add(new BorderWrapper(copyright, 0, UI_SPACING, UI_SPACING, UI_SPACING), BorderLayout.SOUTH);
-		
+
 		// Close handling
 		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 		addWindowListener(new WindowAdapter()
@@ -190,7 +190,7 @@ public class GpsBabelEasy extends JFrame
 				}
 			}
 		});
-		
+
 		// Set up Mac-specific stuff
 		Application.getApplication().setAboutHandler(new AboutHandler()
 		{
@@ -207,7 +207,7 @@ public class GpsBabelEasy extends JFrame
 		setLocationRelativeTo(null);
 		setVisible(true);
 	}
-	
+
 	/**
 	 * @return True if app can currently be closed
 	 */
@@ -218,7 +218,7 @@ public class GpsBabelEasy extends JFrame
 			return lockCount == 0;
 		}
 	}
-	
+
 	/**
 	 * Locks close, preventing the user from closing the app.
 	 */
@@ -237,8 +237,8 @@ public class GpsBabelEasy extends JFrame
 					}
 				});
 			}
-			lockCount++;			
-		}		
+			lockCount++;
+		}
 	}
 
 	/**
@@ -265,9 +265,9 @@ public class GpsBabelEasy extends JFrame
 					}
 				});
 			}
-		}		
+		}
 	}
-	
+
 	/**
 	 * Result of running the program.
 	 */
@@ -275,14 +275,14 @@ public class GpsBabelEasy extends JFrame
 	{
 		private int result;
 		private String stdout, stderr;
-		
+
 		private RunResult(int result, String stdout, String stderr)
 		{
 			this.result = result;
 			this.stdout = stdout;
 			this.stderr = stderr;
 		}
-		
+
 		/**
 		 * @return Program result integer
 		 */
@@ -290,16 +290,16 @@ public class GpsBabelEasy extends JFrame
 		{
 			return result;
 		}
-		
-		/** 
+
+		/**
 		 * @return Standard output (treated as ISO 8859-1)
 		 */
 		public String getStdout()
 		{
 			return stdout;
 		}
-		
-		/** 
+
+		/**
 		 * @return Standard err (treated as ISO 8859-1)
 		 */
 		public String getStderr()
@@ -307,7 +307,7 @@ public class GpsBabelEasy extends JFrame
 			return stderr;
 		}
 	}
-	
+
 	/**
 	 * Runs the GPSBabel command-line tool and waits for it to complete.
 	 * @param parameters Parameters
@@ -342,7 +342,7 @@ public class GpsBabelEasy extends JFrame
 		}
 		return new RunResult(value, stdout.getOut(), stderr.getOut());
 	}
-	
+
 	/**
 	 * Thread that eats the content of a stream from running a process.
 	 */
@@ -350,16 +350,16 @@ public class GpsBabelEasy extends JFrame
 	{
 		private static final int BUFFER_SIZE = 4096;
 		private InputStream stream;
-		
+
 		private String out;
 		private Throwable error;
-		
+
 		private StreamEater(InputStream stream)
 		{
 			this.stream = stream;
 			start();
 		}
-		
+
 		@Override
 		public void run()
 		{
@@ -391,7 +391,7 @@ public class GpsBabelEasy extends JFrame
 				{
 					setError(t);
 				}
-				
+
 				synchronized(this)
 				{
 					// Use ISO-8859-1 just so it can't error
@@ -408,7 +408,7 @@ public class GpsBabelEasy extends JFrame
 				}
 			}
 		}
-		
+
 		private void setError(Throwable t)
 		{
 			// Only take the first error
@@ -443,9 +443,9 @@ public class GpsBabelEasy extends JFrame
 				}
 				return out;
 			}
-		}		
+		}
 	}
-	
+
 	/**
 	 * Called if there is a fatal error in the system.
 	 * @param t Error trace
@@ -465,18 +465,18 @@ public class GpsBabelEasy extends JFrame
 			});
 			return;
 		}
-		
+
 		JOptionPane.showMessageDialog(this,
-			"An error occurred. The program will now exit. (Details in Console.)", 
+			"An error occurred. The program will now exit. (Details in Console.)",
 			"GPSBabel easy convertor error", JOptionPane.ERROR_MESSAGE);
 		System.err.println("GPSBabel easy converter fatal error:");
 		t.printStackTrace();
 		System.exit(0);
 	}
-	
+
 	private LinkedList<Conversion> queue = new LinkedList<Conversion>();
 	private boolean threadRunning;
-	
+
 	private static class Conversion
 	{
 		private FormatChooser.Format in, out;
@@ -491,7 +491,7 @@ public class GpsBabelEasy extends JFrame
 			this.outFolder = outFolder;
 		}
 	}
-	
+
 	/**
 	 * Called to initiate convert.
 	 * @param files Files to convert
@@ -503,7 +503,7 @@ public class GpsBabelEasy extends JFrame
 		{
 			progress.getModel().addRow(file.getName(), file);
 		}
-		
+
 		// Get settings
 		final FormatChooser.Format inFormat = chooser.getInFormat(),
 			outFormat = chooser.getOutFormat();
@@ -511,7 +511,7 @@ public class GpsBabelEasy extends JFrame
 		final AfterOptions.InFileAction inAction = options.getInAction();
 		final File outFolder = options.getOutFolder();
 		options.remember();
-		
+
 		// Add to queue
 		boolean needsThread;
 		synchronized(queue)
@@ -528,7 +528,7 @@ public class GpsBabelEasy extends JFrame
 			}
 		}
 	}
-	
+
 	private class ConversionThread extends Thread
 	{
 		private ConversionThread()
@@ -536,7 +536,7 @@ public class GpsBabelEasy extends JFrame
 			start();
 			threadRunning = true;
 		}
-		
+
 		@Override
 		public void run()
 		{
@@ -553,11 +553,11 @@ public class GpsBabelEasy extends JFrame
 					}
 					conversion = queue.removeFirst();
 				}
-				
+
 				// Get result display row
 				ProgressTableModel.Row row = progress.getModel().getRow(conversion.file);
 				row.setProcessing();
-				
+
 				try
 				{
 					// Work out new name for the file
@@ -569,41 +569,41 @@ public class GpsBabelEasy extends JFrame
 					File targetFile = new File(targetFolder,
 						conversion.file.getName().replaceFirst("\\.[^.]+$", "") +
 						"." + conversion.out.getCode());
-					
+
 					// Check they're not the same
 					if(targetFile.getCanonicalFile().equals(conversion.file.getCanonicalFile()))
 					{
 						row.setFailure("Target file would have same name as source");
 						continue;
 					}
-					
+
 					// Check it doesn't exist already
 					if(targetFile.exists())
 					{
 						row.setFailure("Target file already exists");
 						continue;
 					}
-					
+
 					// Check it doesn't exist already
 					if(!targetFile.getParentFile().canWrite())
 					{
 						row.setFailure("Target file not writable");
 						continue;
 					}
-					
+
 					// Do convert
 					RunResult result = runGpsBabel(
 						"-r", "-t",
 						"-i", conversion.in.getCode(), "-f", conversion.file.getAbsolutePath(),
 						"-o", conversion.out.getCode(), "-F", targetFile.getAbsolutePath());
-					
+
 					System.out.println(result.getStdout());
 					System.err.println(result.getStderr());
 					// TODO Check output for failure!
-					
+
 					// After-conversion actions
 					conversion.inAction.afterConversion(conversion.file);
-					
+
 					// OK, it succeeded
 					row.setSuccess("\u2192 " + targetFile.getName());
 				}

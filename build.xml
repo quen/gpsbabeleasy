@@ -1,28 +1,11 @@
 <!--
-  leafChat Ant build script
-  
+  GPSBabel easy converter Ant build script
+
   This is a standard Ant build; you can build the app's deliverables by running
   the default 'all' target.
 
-  Properties that you need to override (in your IDE or on Ant commandline):
-  - sigtest
-  - makensis (if building Windows version)
-  - javart (if building on a Mac)
-
-  For the least effort, build the 'zip' target (which is the standard Linux
-  distributable, but also works on other platforms). That way you only need
-  sigtest and not the other two dependencies.
-  
-  See below for details of all properties (including ones you don't *need* to
-  override, but might want to).
-  
-  The Mac build will only work on a Mac because it uses the Mac-only 'hdiutil'
-  executable. On other platforms, build the targets 'zip' and 'windowsinstaller'
-  to create the other two deliverables.
-  
-  The full build typically takes a bit under 2 minutes on my system which has
-  a relatively slow hard disk. On a system with a faster HD it should be
-  quicker, and with an SSD much quicker.
+  The build will only work on a Mac because it uses the Mac-only 'hdiutil'
+  executable.
   -->
 <project name="gpsbabeleasy" default="all" basedir=".">
 
@@ -41,7 +24,7 @@
 	  -->
 	<property name="stub"
 		location="/System/Library/Frameworks/JavaVM.framework/Resources/MacOS/JavaApplicationStub"/>
-	
+
 	<description>
 		 Builds GPSBabel easy converter.
 	</description>
@@ -63,7 +46,7 @@
 				<striplinebreaks/>
 			</filterchain>
 		</loadfile>
-		
+
 		<!-- Define target filename -->
 		<property name="osxdmg" location="${dmglocation}/GPSBabelEasyConverter_${version}.dmg"/>
 
@@ -95,7 +78,7 @@
 
 	<target name="osxapp" depends="jar">
 
-			<property name="osxapp" location="${build}/osxdmg/GPSBabel easy converter.app"/> 
+			<property name="osxapp" location="${build}/osxdmg/GPSBabel easy converter.app"/>
 
 			<!-- Create the distribution directory -->
 			<mkdir dir="${osxapp}"/>
