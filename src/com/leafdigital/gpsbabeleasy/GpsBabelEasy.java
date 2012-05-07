@@ -109,8 +109,8 @@ public class GpsBabelEasy extends JFrame
 		// Window basics
 		super(TITLE_TEXT);
 
-		// TODO Find this inside the app
-		gpsBabelPath = "/Users/sam/Desktop/gpsbabel";
+		// Relative path should work when running from IDE or app bundle
+		gpsBabelPath = "./gpsbabel";
 	
 		setLayout(new BorderLayout());
 		JPanel main = new JPanel(new BorderLayout(UI_SPACING, UI_SPACING - UI_SPACING_COMBO_ANTIPAD));

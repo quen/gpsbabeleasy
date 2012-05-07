@@ -112,6 +112,11 @@
 					<filter token="DOTTEDVERSION" value="${version}"/>
 				</filterset>
 			</copy>
+		  <copy todir="${osxapp}" file="gpsbabel"/>
+		  <exec executable="chmod">
+				<arg value="a+x"/>
+		  	<arg path="${osxapp}/gpsbabel"/>
+			</exec>
 
 			<!-- Copy jar file -->
 			<copy todir="${osxapp}/Contents/Resources/Java" file="${build}/output/GPSBabelEasy.jar"/>
