@@ -62,6 +62,14 @@
 			includeantruntime="false">
 			<include name="com/leafdigital/gpsbabeleasy/*.java"/>
 		</javac>
+		<!-- Copy data files -->
+		<copy todir="${build}/classes">
+			<fileset dir="src">
+				<exclude name="**/*.java"/>
+				<exclude name="**/*.html"/>
+			</fileset>
+		</copy>
+
 		<!-- Add the file with version info -->
 		<echo file="${build}/classes/com/leafdigital/gpsbabeleasy/version.txt"
 			message="${version}"/>
