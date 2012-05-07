@@ -12,8 +12,21 @@ They already have a GUI but I didn't like it.
 Status
 ------
 
-Released. Please see the wiki page for end user documentation (click 'Wiki' tab
-above) if you just want to download and run the program.
+Released.
+
+If you just want to download and run the program, please go to the wiki page
+now. (Click the 'Wiki' tab above.)
+
+This readme mostly contains technical details for those interested in building
+the application.
+
+
+Support
+-------
+
+No support, but feel free to file issues if you find a problem with the system
+(so long as you're sure it is a problem with this wrapper and not a problem
+with GPSBabel itself).
 
 
 Building
@@ -31,6 +44,18 @@ You need to build this on a Mac because:
     Mac-only.
 
 
+Other platforms
+---------------
+
+The only reason this is Mac-only is that I couldn't be bothered to package it
+for other platforms. A few details might need to be tweaked, like how it
+finds the native binary, and the Trash support that uses AppleScript.
+Otherwise, it's pure Java 6 so porting it should be trivial, if anyone wants.
+
+(If you'd like to contribute a Windows or Linux port back into this repository,
+please catch up with me on IRC some time so we can discuss it.)
+
+
 License
 -------
 
@@ -44,6 +69,6 @@ Credits
 
 GPSBabel ('gpsbabel' binary) copyright 2012 Robert Lipe / gpsbabel.org.
 
-All source code by Samuel Marshall / leafdigital.
+All source code by Samuel Marshall / leafdigital. (Twitter: @leafdigital.)
 
 Icon based on the engraving 'Turris Babel' by Athanasius Kircher (1679).
