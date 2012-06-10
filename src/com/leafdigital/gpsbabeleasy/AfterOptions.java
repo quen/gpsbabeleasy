@@ -389,10 +389,71 @@ public class AfterOptions extends JPanel
 			}
 			if(!usedFile.renameTo(inTarget))
 			{
-				throw new IOException("Failed to move file from " + usedFile + " to " +
-					inTarget);
+				// Rename can fail across filesystems, so try a copy
+				try
+				{
+					renameWithCopy(usedFile, inTarget);
+				}
+				catch(IOException e)
+				{
+					IOException changedMessage = new IOException(
+						"Failed to move file from " + usedFile + " to " + inTarget);
+					changedMessage.initCause(e);
+					throw changedMessage;
+				}
 			}
 			return inTarget;
+		}
+	}
+
+	/**
+	 * Renames a file by copying it and deleting the original.
+	 * @param source Source file
+	 * @param target Target file
+	 * @throws IOException Any error
+	 */
+	private static void renameWithCopy(File source, File target) throws IOException
+	{
+		boolean ok = false;
+		try
+		{
+			// Copy file.
+			FileInputStream input = new FileInputStream(source);
+			FileOutputStream output = new FileOutputStream(target);
+			byte[] buffer = new byte[65536];
+			while(true)
+			{
+				int read = input.read(buffer);
+				if(read == -1)
+				{
+					break;
+				}
+				output.write(buffer, 0, read);
+			}
+			input.close();
+			output.close();
+
+			// Update date.
+			if(!target.setLastModified(source.lastModified()))
+			{
+				throw new IOException("Date set failed");
+			}
+
+			// Delete original file.
+			if(!source.delete())
+			{
+				throw new IOException("Delete failed");
+			}
+			ok = true;
+		}
+		finally
+		{
+			// If anything failed, try to delete the target file so this operation is
+			// atomic, as best we can manage.
+			if(!ok)
+			{
+				target.delete();
+			}
 		}
 	}
 
